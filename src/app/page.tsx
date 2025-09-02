@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Presentation } from "lucide-react";
 
 // URL de votre Genially principal. Vous pouvez la modifier ici.
-const MAIN_GENIALLY_URL = "https://view.genial.ly/668ba83234d3d30013a6d7f9";
-const MAIN_GENIALLY_TITLE = "Ma Présentation Principale";
+const MAIN_GENIALLY_URL = "https://view.genially.com/68b708612ae6ce74cd543587/interactive-content-seance-1";
+const MAIN_GENIALLY_TITLE = "Je révise le dernier cours !";
 
 export default function Home() {
   return (

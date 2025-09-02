@@ -5,33 +5,42 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { History, Eye } from "lucide-react";
 
-// Vous pouvez modifier cette liste pour inclure vos Geniallys
+// Modifiez cette liste pour ajouter vos propres Geniallys avec un titre et une URL.
 const historyItems = [
   {
-    id: "668ba83234d3d30013a6d7f9",
     url: "https://view.genial.ly/668ba83234d3d30013a6d7f9",
     title: "Présentation sur l'Histoire",
-    createdAt: "2023-10-27T10:00:00.000Z",
   },
   {
-    id: "668ba8053f39380013f7b4e9",
     url: "https://view.genial.ly/668ba8053f39380013f7b4e9",
     title: "Leçon de Sciences",
-    createdAt: "2023-10-26T14:30:00.000Z",
   },
   {
-    id: "65f32a75e3532600142b6a5e",
     url: "https://view.genial.ly/65f32a75e3532600142b6a5e",
     title: "Projet d'Art",
-    createdAt: "2023-10-25T09:15:00.000Z",
   },
+  // Ajoutez d'autres Geniallys ici
+  // {
+  //   url: "VOTRE_URL_GENIALLY",
+  //   title: "VOTRE_TITRE",
+  // },
 ];
 
 export default function HistoryPage() {
   const handleView = (url: string) => {
-    // Dans cette version simplifiée, nous ouvrons dans un nouvel onglet.
     window.open(url, "_blank");
   };
+
+  // Utilise une partie de l'URL comme identifiant unique pour l'image
+  const extractIdFromUrl = (url: string) => {
+    try {
+      const urlObject = new URL(url);
+      const pathParts = urlObject.pathname.split('/');
+      return pathParts[pathParts.length - 1] || Date.now().toString();
+    } catch {
+      return Date.now().toString();
+    }
+  }
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -51,27 +60,27 @@ export default function HistoryPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {historyItems.map((genially) => (
-            <Card key={genially.id} className="flex flex-col hover:shadow-accent/50 hover:shadow-lg transition-shadow duration-300">
-              <CardHeader>
-                <CardTitle className="font-headline">{genially.title}</CardTitle>
-                <CardDescription>
-                  Créé le {new Date(genially.createdAt).toLocaleDateString('fr-FR')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <div className="aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
-                    <Image data-ai-hint="presentation abstract" src={`https://picsum.photos/seed/${genially.id}/400/225`} alt={`Aperçu pour ${genially.title}`} width={400} height={225} className="w-full h-full object-cover" />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button onClick={() => handleView(genially.url)} className="w-full">
-                  <Eye className="mr-2 h-4 w-4" />
-                  Voir
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+          {historyItems.map((genially, index) => {
+            const id = extractIdFromUrl(genially.url);
+            return (
+              <Card key={index} className="flex flex-col hover:shadow-accent/50 hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <CardTitle className="font-headline">{genially.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <div className="aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
+                      <Image data-ai-hint="presentation abstract" src={`https://picsum.photos/seed/${id}/400/225`} alt={`Aperçu pour ${genially.title}`} width={400} height={225} className="w-full h-full object-cover" />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button onClick={() => handleView(genially.url)} className="w-full">
+                    <Eye className="mr-2 h-4 w-4" />
+                    Voir
+                  </Button>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

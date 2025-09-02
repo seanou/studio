@@ -7,15 +7,15 @@ import { History, Link as LinkIcon } from "lucide-react";
 const historyItems = [
   {
     url: "https://view.genial.ly/668ba83234d3d30013a6d7f9",
-    title: "Présentation sur l'Histoire",
+    title: "Bientôt disponible !",
   },
   {
     url: "https://view.genial.ly/668ba8053f39380013f7b4e9",
-    title: "Leçon de Sciences",
+    title: "Bientôt disponible !",
   },
   {
     url: "https://view.genial.ly/65f32a75e3532600142b6a5e",
-    title: "Projet d'Art",
+    title: "Bientôt disponible !",
   },
   // Ajoutez d'autres Geniallys ici
   // {

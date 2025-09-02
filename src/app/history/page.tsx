@@ -1,9 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { History, Eye } from "lucide-react";
+import { Card, CardTitle, CardDescription } from "@/components/ui/card";
+import { History, Link as LinkIcon } from "lucide-react";
 
 // Modifiez cette liste pour ajouter vos propres Geniallys avec un titre et une URL.
 const historyItems = [
@@ -27,20 +25,6 @@ const historyItems = [
 ];
 
 export default function HistoryPage() {
-  const handleView = (url: string) => {
-    window.open(url, "_blank");
-  };
-
-  // Utilise une partie de l'URL comme identifiant unique pour l'image
-  const extractIdFromUrl = (url: string) => {
-    try {
-      const urlObject = new URL(url);
-      const pathParts = urlObject.pathname.split('/');
-      return pathParts[pathParts.length - 1] || Date.now().toString();
-    } catch {
-      return Date.now().toString();
-    }
-  }
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -59,28 +43,22 @@ export default function HistoryPage() {
             </CardDescription>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {historyItems.map((genially, index) => {
-            const id = extractIdFromUrl(genially.url);
-            return (
-              <Card key={index} className="flex flex-col hover:shadow-accent/50 hover:shadow-lg transition-shadow duration-300">
-                <CardHeader>
-                  <CardTitle className="font-headline">{genially.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <div className="aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
-                      <Image data-ai-hint="presentation abstract" src={`https://picsum.photos/seed/${id}/400/225`} alt={`Aperçu pour ${genially.title}`} width={400} height={225} className="w-full h-full object-cover" />
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button onClick={() => handleView(genially.url)} className="w-full">
-                    <Eye className="mr-2 h-4 w-4" />
-                    Voir
-                  </Button>
-                </CardFooter>
-              </Card>
-            );
-          })}
+        <div className="bg-card border rounded-lg p-6 shadow-sm">
+            <ul className="space-y-4">
+            {historyItems.map((genially, index) => (
+                <li key={index}>
+                    <a 
+                        href={genially.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center text-lg text-foreground hover:text-accent hover:underline transition-colors duration-200"
+                    >
+                        <LinkIcon className="mr-3 h-5 w-5 text-primary" />
+                        {genially.title}
+                    </a>
+                </li>
+            ))}
+            </ul>
         </div>
       )}
     </div>

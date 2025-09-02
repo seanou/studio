@@ -13,6 +13,7 @@ export function SplashScreen() {
       <h1 className="text-3xl font-bold font-headline text-primary mt-4">
         Schola Ludus : Le latin autrement !
       </h1>
+      <div className="mt-8 h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
     </div>
   );
 }

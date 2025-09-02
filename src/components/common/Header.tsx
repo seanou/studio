@@ -17,14 +17,14 @@ export function Header() {
   return (
     <header className="bg-primary text-primary-foreground shadow-md">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center gap-2 text-2xl font-bold tracking-wider font-headline">
+        <div className="flex items-center justify-between h-24">
+          <Link href="/" className="flex items-center gap-3 text-2xl font-bold tracking-wider font-headline">
             <Image 
               src="https://i.ibb.co/1Wr1PtX/image-removebg-preview-47.png" 
               alt="Schola Ludus Logo" 
-              width={50} 
-              height={50} 
-              className="h-12 w-auto"
+              width={60} 
+              height={60} 
+              className="h-16 w-auto"
             />
             <span className="hidden sm:inline">Schola Ludus</span>
           </Link>

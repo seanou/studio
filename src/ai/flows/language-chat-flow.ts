@@ -58,13 +58,15 @@ const languageChatFlow = ai.defineFlow(
             history: [
                 { role: 'user', content: [{text: input.message}] },
                 llmResponse.message,
-                { role: 'tool', content: toolResponses.map(output => ({
+                { role: 'tool', content: toolResponses.map((output, i) => ({
                     toolResponse: {
-                        name: 'getDefinition',
+                        name: toolCalls[i].name,
                         output: output
                     }
                 }))}
-            ]
+            ],
+            model: 'googleai/gemini-2.5-flash',
+            tools: [getDefinition]
         });
         return { response: finalResponse.text };
     }

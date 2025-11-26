@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Bot, Languages, Send } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Slider } from "@/components/ui/slider";
 
 type Language = "latin" | "grec";
 
@@ -21,6 +22,8 @@ export default function Home() {
   const [response, setResponse] = useState<ParsedWord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<Language>("latin");
+  const [skillLevel, setSkillLevel] = useState([50]);
+
 
   const parseResponse = (text: string): ParsedWord[] => {
     const regex = /\[\[(.*?):(.*?)\]\]/g;
@@ -50,7 +53,7 @@ export default function Home() {
     setIsLoading(true);
     setResponse([]);
     try {
-      const input: LanguageChatInput = { message: query, language: selectedLanguage };
+      const input: LanguageChatInput = { message: query, language: selectedLanguage, skillLevel: skillLevel[0] };
       const result = await languageChat(input);
       setResponse(parseResponse(result.response));
     } catch (error) {
@@ -149,11 +152,11 @@ export default function Home() {
         </Card>
       </div>
 
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-8 items-center w-40">
             <Button
                 variant={selectedLanguage === 'latin' ? 'default' : 'outline'}
                 onClick={() => setSelectedLanguage('latin')}
-                className="w-40 justify-start"
+                className="w-full justify-start"
             >
                 <Languages className="mr-2" />
                 Latin
@@ -161,11 +164,30 @@ export default function Home() {
             <Button
                 variant={selectedLanguage === 'grec' ? 'default' : 'outline'}
                 onClick={() => setSelectedLanguage('grec')}
-                className="w-40 justify-start"
+                className="w-full justify-start"
             >
                 <Languages className="mr-2" />
                 Grec ancien
             </Button>
+            
+            <div className="flex flex-col items-center gap-4 pt-4 w-full">
+                <div className="flex justify-between w-full text-xs text-muted-foreground px-2">
+                    <span>Nul</span>
+                    <span>Expert</span>
+                </div>
+                <div className="h-40 flex justify-center">
+                    <Slider
+                        defaultValue={skillLevel}
+                        onValueChange={setSkillLevel}
+                        max={100}
+                        step={1}
+                        orientation="vertical"
+                    />
+                </div>
+                <div className="text-sm font-medium text-center">
+                    Niveau de compétence
+                </div>
+            </div>
       </div>
     </div>
   );

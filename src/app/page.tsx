@@ -155,22 +155,24 @@ export default function Home() {
             <SidebarContent>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton 
+                        <Button
+                            variant={selectedLanguage === 'latin' ? 'default' : 'outline'}
                             onClick={() => setSelectedLanguage('latin')}
-                            isActive={selectedLanguage === 'latin'}
+                            className="w-40 justify-start"
                         >
-                            <Languages />
+                            <Languages className="mr-2" />
                             Latin
-                        </SidebarMenuButton>
+                        </Button>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton 
+                        <Button
+                            variant={selectedLanguage === 'grec' ? 'default' : 'outline'}
                             onClick={() => setSelectedLanguage('grec')}
-                            isActive={selectedLanguage === 'grec'}
+                             className="w-40 justify-start"
                         >
-                            <Languages />
+                            <Languages className="mr-2" />
                             Grec ancien
-                        </SidebarMenuButton>
+                        </Button>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarContent>

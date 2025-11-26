@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -171,18 +172,18 @@ export default function Home() {
             </Button>
             
             <div className="flex flex-col items-center gap-4 pt-4 w-full">
-                <div className="flex justify-between w-full text-xs text-muted-foreground px-2">
-                    <span>Nul</span>
+                <div className="flex flex-col items-center justify-between w-full text-xs text-muted-foreground px-2 h-40">
                     <span>Expert</span>
-                </div>
-                <div className="h-40 flex justify-center">
-                    <Slider
-                        defaultValue={skillLevel}
-                        onValueChange={setSkillLevel}
-                        max={100}
-                        step={1}
-                        orientation="vertical"
-                    />
+                    <div className="flex-grow flex items-center justify-center">
+                        <Slider
+                            defaultValue={skillLevel}
+                            onValueChange={setSkillLevel}
+                            max={100}
+                            step={1}
+                            orientation="vertical"
+                        />
+                    </div>
+                    <span>Débutant</span>
                 </div>
                 <div className="text-sm font-medium text-center">
                     Niveau de compétence

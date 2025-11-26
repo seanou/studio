@@ -1,3 +1,4 @@
+
 'use server';
 
 import { ai } from '@/ai/genkit';
@@ -19,13 +20,13 @@ const languageChatFlow = ai.defineFlow(
     
     let difficulty;
     if (input.skillLevel <= 25) {
-        difficulty = 'très débutant (A1), utilise des phrases très simples et un vocabulaire de base. Propose la traduction de 5 mots.';
-    } else if (input.skillLevel <= 50) {
-        difficulty = 'débutant (A2), avec des phrases simples. Propose la traduction de 4 mots.';
-    } else if (input.skillLevel <= 75) {
-        difficulty = 'intermédiaire (B1), avec une grammaire un peu plus complexe. Propose la traduction de 3 mots.';
-    } else {
         difficulty = 'avancé (B2/C1), n\'hésite pas à utiliser des structures de phrases complexes et un vocabulaire riche. Propose la traduction de 2 mots.';
+    } else if (input.skillLevel <= 50) {
+        difficulty = 'intermédiaire (B1), avec une grammaire un peu plus complexe. Propose la traduction de 3 mots.';
+    } else if (input.skillLevel <= 75) {
+        difficulty = 'débutant (A2), avec des phrases simples. Propose la traduction de 4 mots.';
+    } else {
+        difficulty = 'très débutant (A1), utilise des phrases très simples et un vocabulaire de base. Propose la traduction de 5 mots.';
     }
 
     const llmResponse = await ai.generate({

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { BookOpenText, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function Header() {
@@ -11,7 +11,6 @@ export function Header() {
 
   const navItems = [
     { href: '/', label: 'Accueil', icon: Home },
-    { href: '/history', label: 'Historique', icon: BookOpenText },
   ];
 
   return (
@@ -22,9 +21,9 @@ export function Header() {
             <Image 
               src="https://i.ibb.co/1Wr1PtX/image-removebg-preview-47.png" 
               alt="Schola Ludus Logo" 
-              width={60} 
-              height={60} 
-              className="h-16 w-auto"
+              width={80} 
+              height={80} 
+              className="h-20 w-auto"
             />
             <span className="hidden sm:inline">Schola Ludus</span>
           </Link>

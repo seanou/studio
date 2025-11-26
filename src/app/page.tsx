@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Bot, Languages, Send } from "lucide-react";
-import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarContent } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type Language = "latin" | "grec";
@@ -84,99 +83,90 @@ export default function Home() {
   const { title, description, placeholder } = getCardTexts();
 
   return (
-    <SidebarProvider>
-        <SidebarInset>
-            <div className="space-y-8 animate-fade-in">
-            <Card className="max-w-3xl mx-auto">
-                <CardHeader>
-                <CardTitle className="font-headline text-2xl text-primary flex items-center gap-2">
-                    <Bot className="h-6 w-6" />
-                    {title}
-                </CardTitle>
-                <CardDescription>
-                    {description}
-                </CardDescription>
-                </CardHeader>
-                <CardContent>
-                <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
-                    <Input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder={placeholder}
-                    className="flex-grow"
-                    disabled={isLoading}
-                    />
-                    <Button type="submit" disabled={isLoading}>
-                    <Send className="h-4 w-4" />
-                    <span className="sr-only">Envoyer</span>
-                    </Button>
-                </form>
+    <div className="flex justify-center items-start gap-8">
+      <div className="w-full max-w-3xl animate-fade-in">
+        <Card>
+            <CardHeader>
+            <CardTitle className="font-headline text-2xl text-primary flex items-center gap-2">
+                <Bot className="h-6 w-6" />
+                {title}
+            </CardTitle>
+            <CardDescription>
+                {description}
+            </CardDescription>
+            </CardHeader>
+            <CardContent>
+            <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+                <Input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={placeholder}
+                className="flex-grow"
+                disabled={isLoading}
+                />
+                <Button type="submit" disabled={isLoading}>
+                <Send className="h-4 w-4" />
+                <span className="sr-only">Envoyer</span>
+                </Button>
+            </form>
 
-                {(isLoading || response.length > 0) && (
-                    <div className="mt-6 pt-6 border-t">
-                        <h3 className="text-lg font-semibold mb-2 text-primary">
-                            {selectedLanguage === 'latin' ? 'Responsum:' : 'Ἀπόκρισις:'}
-                        </h3>
-                        <div className="p-4 bg-muted/50 rounded-lg min-h-[100px] text-foreground/80 italic">
-                        {isLoading ? (
-                            <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
-                                <span>{selectedLanguage === 'latin' ? 'Cogitat...' : 'Φροντίζει...'}</span>
-                            </div>
-                        ) : (
-                            <TooltipProvider>
-                                <p>
-                                {response.map((part, index) =>
-                                    part.translation ? (
-                                    <Tooltip key={index}>
-                                        <TooltipTrigger asChild>
-                                            <span className="underline decoration-dotted cursor-pointer font-semibold text-accent">{part.word}</span>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>{part.translation}</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                    ) : (
-                                    <span key={index}>{part.word}</span>
-                                    )
-                                )}
-                                </p>
-                            </TooltipProvider>
-                        )}
+            {(isLoading || response.length > 0) && (
+                <div className="mt-6 pt-6 border-t">
+                    <h3 className="text-lg font-semibold mb-2 text-primary">
+                        {selectedLanguage === 'latin' ? 'Responsum:' : 'Ἀπόκρισις:'}
+                    </h3>
+                    <div className="p-4 bg-muted/50 rounded-lg min-h-[100px] text-foreground/80 italic">
+                    {isLoading ? (
+                        <div className="flex items-center gap-2">
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-solid border-primary border-t-transparent"></div>
+                            <span>{selectedLanguage === 'latin' ? 'Cogitat...' : 'Φροντίζει...'}</span>
                         </div>
+                    ) : (
+                        <TooltipProvider>
+                            <p>
+                            {response.map((part, index) =>
+                                part.translation ? (
+                                <Tooltip key={index}>
+                                    <TooltipTrigger asChild>
+                                        <span className="underline decoration-dotted cursor-pointer font-semibold text-accent">{part.word}</span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{part.translation}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                                ) : (
+                                <span key={index}>{part.word}</span>
+                                )
+                            )}
+                            </p>
+                        </TooltipProvider>
+                    )}
                     </div>
-                )}
-                </CardContent>
-            </Card>
-            </div>
-        </SidebarInset>
-        <Sidebar side="right" className="items-center justify-center">
-            <SidebarContent>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <Button
-                            variant={selectedLanguage === 'latin' ? 'default' : 'outline'}
-                            onClick={() => setSelectedLanguage('latin')}
-                            className="w-40 justify-start"
-                        >
-                            <Languages className="mr-2" />
-                            Latin
-                        </Button>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <Button
-                            variant={selectedLanguage === 'grec' ? 'default' : 'outline'}
-                            onClick={() => setSelectedLanguage('grec')}
-                             className="w-40 justify-start"
-                        >
-                            <Languages className="mr-2" />
-                            Grec ancien
-                        </Button>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarContent>
-        </Sidebar>
-    </SidebarProvider>
+                </div>
+            )}
+            </CardContent>
+        </Card>
+      </div>
+
+      <div className="flex flex-col gap-4 items-center">
+            <Button
+                variant={selectedLanguage === 'latin' ? 'default' : 'outline'}
+                onClick={() => setSelectedLanguage('latin')}
+                className="w-40 justify-start"
+            >
+                <Languages className="mr-2" />
+                Latin
+            </Button>
+            <Button
+                variant={selectedLanguage === 'grec' ? 'default' : 'outline'}
+                onClick={() => setSelectedLanguage('grec')}
+                className="w-40 justify-start"
+            >
+                <Languages className="mr-2" />
+                Grec ancien
+            </Button>
+      </div>
+    </div>
   );
 }

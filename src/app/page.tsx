@@ -44,7 +44,6 @@ export default function Home() {
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = false;
-      recognitionRef.current.lang = 'fr-FR';
       recognitionRef.current.interimResults = false;
 
       recognitionRef.current.onresult = (event: any) => {
@@ -64,7 +63,30 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (recognitionRef.current) {
+        if (selectedLanguage === 'latin') {
+            recognitionRef.current.lang = 'la';
+        } else if (selectedLanguage === 'grec') {
+            recognitionRef.current.lang = 'el-GR';
+        } else {
+            recognitionRef.current.lang = 'fr-FR';
+        }
+    }
+  }, [selectedLanguage]);
+
+
   const toggleRecording = () => {
+    if (recognitionRef.current) {
+        if (selectedLanguage === 'latin') {
+            recognitionRef.current.lang = 'la';
+        } else if (selectedLanguage === 'grec') {
+            recognitionRef.current.lang = 'el-GR';
+        } else {
+            recognitionRef.current.lang = 'fr-FR';
+        }
+    }
+
     if (isRecording) {
       recognitionRef.current?.stop();
       setIsRecording(false);
@@ -140,13 +162,13 @@ export default function Home() {
     if (selectedLanguage === 'latin') {
       return {
         title: "Interroga Magistrum Digitalem",
-        description: "Posez votre question en français, et l'IA vous répondra en latin.",
+        description: "Posez votre question en français ou en latin, et l'IA vous répondra en latin.",
         placeholder: "Escribe hic..."
       }
     }
     return {
       title: "Ερώτησον τὸν Διδάσκαλον",
-      description: "Posez votre question en français, et l'IA vous répondra en grec ancien.",
+      description: "Posez votre question en français ou en grec ancien, et l'IA vous répondra en grec ancien.",
       placeholder: "Γράψον ἐνθάδε..."
     }
   }

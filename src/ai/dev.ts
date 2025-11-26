@@ -1,4 +1,4 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/latin-chat-flow.ts';
+import '@/ai/flows/language-chat-flow.ts';

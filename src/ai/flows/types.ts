@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
-export const LatinChatInputSchema = z.object({
+export const LanguageChatInputSchema = z.object({
   message: z.string(),
+  language: z.enum(['latin', 'grec']),
 });
-export type LatinChatInput = z.infer<typeof LatinChatInputSchema>;
+export type LanguageChatInput = z.infer<typeof LanguageChatInputSchema>;
 
-export const LatinChatOutputSchema = z.object({
+export const LanguageChatOutputSchema = z.object({
   response: z.string(),
 });
-export type LatinChatOutput = z.infer<typeof LatinChatOutputSchema>;
+export type LanguageChatOutput = z.infer<typeof LanguageChatOutputSchema>;

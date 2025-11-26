@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Bot, Languages, Send } from "lucide-react";
-import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarContent } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type Language = "latin" | "grec";
@@ -85,28 +85,6 @@ export default function Home() {
 
   return (
     <SidebarProvider>
-        <Sidebar>
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton 
-                        onClick={() => setSelectedLanguage('latin')}
-                        isActive={selectedLanguage === 'latin'}
-                    >
-                        <Languages />
-                        Latin
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <SidebarMenuButton 
-                        onClick={() => setSelectedLanguage('grec')}
-                        isActive={selectedLanguage === 'grec'}
-                    >
-                        <Languages />
-                        Grec ancien
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </Sidebar>
         <SidebarInset>
             <div className="space-y-8 animate-fade-in">
             <Card className="max-w-3xl mx-auto">
@@ -173,6 +151,30 @@ export default function Home() {
             </Card>
             </div>
         </SidebarInset>
+        <Sidebar side="right" className="items-center justify-center">
+            <SidebarContent>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton 
+                            onClick={() => setSelectedLanguage('latin')}
+                            isActive={selectedLanguage === 'latin'}
+                        >
+                            <Languages />
+                            Latin
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton 
+                            onClick={() => setSelectedLanguage('grec')}
+                            isActive={selectedLanguage === 'grec'}
+                        >
+                            <Languages />
+                            Grec ancien
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarContent>
+        </Sidebar>
     </SidebarProvider>
   );
 }

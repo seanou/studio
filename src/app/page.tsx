@@ -107,11 +107,15 @@ export default function Home() {
     setAudioUrl(null);
     try {
       const input: LanguageChatInput = { message: currentQuery, language: selectedLanguage, skillLevel: skillLevel[0] };
-      const result = await languageChat(input);
       
-      setResponse(parseResponse(result.response));
+      // We are calling both the language chat and the text to speech flow in parallel
+      const [chatResult, audioResult] = await Promise.all([
+        languageChat(input),
+        textToSpeech(currentQuery) 
+      ]);
+      
+      setResponse(parseResponse(chatResult.response));
 
-      const audioResult = await textToSpeech(result.response.replace(/\[\[(.*?):(.*?)\]\]/g, '$1'));
       if (audioResult.media) {
         setAudioUrl(audioResult.media);
       }
@@ -140,13 +144,13 @@ export default function Home() {
     if (selectedLanguage === 'latin') {
       return {
         title: "Interroga Magistrum Digitalem",
-        description: "Posez votre question en français ou en latin, et l'IA vous répondra en latin.",
+        description: "Posez votre question en français et l'IA vous répondra en latin.",
         placeholder: "Escribe hic..."
       }
     }
     return {
       title: "Ερώτησον τὸν Διδάσκαλον",
-      description: "Posez votre question en français ou en grec ancien, et l'IA vous répondra en grec ancien.",
+      description: "Posez votre question en français et l'IA vous répondra en grec ancien.",
       placeholder: "Γράψον ἐνθάδε..."
     }
   }

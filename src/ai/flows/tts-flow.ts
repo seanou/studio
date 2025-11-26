@@ -11,6 +11,8 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import wav from 'wav';
 import { googleAI } from '@genkit-ai/googleai';
+import { languageChat } from './language-chat-flow';
+import { LanguageChatInputSchema, type LanguageChatInput } from './types';
 
 async function toWav(
   pcmData: Buffer,
@@ -42,12 +44,15 @@ async function toWav(
 const ttsFlow = ai.defineFlow(
   {
     name: 'ttsFlow',
-    inputSchema: z.string(),
+    inputSchema: LanguageChatInputSchema,
     outputSchema: z.object({
         media: z.string().optional(),
     }),
   },
-  async (text) => {
+  async (input) => {
+    const chatResult = await languageChat(input);
+    const textToSpeak = chatResult.response.replace(/\[\[(.*?):(.*?)\]\]/g, '$1');
+
     const { media } = await ai.generate({
       model: googleAI.model('gemini-2.5-flash-preview-tts'),
       config: {
@@ -58,7 +63,7 @@ const ttsFlow = ai.defineFlow(
           },
         },
       },
-      prompt: text,
+      prompt: textToSpeak,
     });
     if (!media) {
       return {};
@@ -73,6 +78,6 @@ const ttsFlow = ai.defineFlow(
   }
 );
 
-export async function textToSpeech(text: string) {
-  return await ttsFlow(text);
+export async function textToSpeech(input: LanguageChatInput) {
+  return await ttsFlow(input);
 }

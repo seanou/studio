@@ -30,7 +30,7 @@ const languageChatFlow = ai.defineFlow(
     }
 
     const llmResponse = await ai.generate({
-        prompt: `Tu es un expert en ${languageName}. Ton niveau de langue doit correspondre à celui d'un locuteur ${difficulty}. Réponds à la question suivante de l'utilisateur (qui peut être en français ou dans la langue cible). Ta réponse doit être exclusivement en ${languageName}. Ne fournis aucune traduction ou explication dans une autre langue.
+        prompt: `Tu es un expert en ${languageName}. Ton niveau de langue doit correspondre à celui d'un locuteur ${difficulty}. La question de l'utilisateur est en français. Tu dois d'abord la traduire en ${languageName}, puis y répondre. Ta réponse doit être exclusivement en ${languageName}. Ne fournis aucune traduction ou explication dans une autre langue.
         
         Important : Pour les mots qui pourraient être difficiles pour un débutant, tu dois les envelopper dans des doubles crochets avec leur traduction en français, comme ceci : [[mot:traduction]]. Par exemple, si le mot est "dominus", tu écriras [[dominus:maître]]. Le nombre de mots à traduire dépend du niveau de difficulté défini.
     

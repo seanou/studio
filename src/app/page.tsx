@@ -45,6 +45,7 @@ export default function Home() {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'fr-FR';
 
       recognitionRef.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
@@ -63,30 +64,7 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    if (recognitionRef.current) {
-        if (selectedLanguage === 'latin') {
-            recognitionRef.current.lang = 'la';
-        } else if (selectedLanguage === 'grec') {
-            recognitionRef.current.lang = 'el-GR';
-        } else {
-            recognitionRef.current.lang = 'fr-FR';
-        }
-    }
-  }, [selectedLanguage]);
-
-
   const toggleRecording = () => {
-    if (recognitionRef.current) {
-        if (selectedLanguage === 'latin') {
-            recognitionRef.current.lang = 'la';
-        } else if (selectedLanguage === 'grec') {
-            recognitionRef.current.lang = 'el-GR';
-        } else {
-            recognitionRef.current.lang = 'fr-FR';
-        }
-    }
-
     if (isRecording) {
       recognitionRef.current?.stop();
       setIsRecording(false);

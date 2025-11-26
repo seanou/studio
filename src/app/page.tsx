@@ -1,14 +1,13 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { languageChat } from "@/ai/flows/language-chat-flow";
-import { textToSpeech } from "@/ai/flows/tts-flow";
 import type { LanguageChatInput } from "@/ai/flows/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Bot, Languages, Send, Mic, MicOff } from "lucide-react";
+import { Bot, Languages, Send } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Slider } from "@/components/ui/slider";
 
@@ -19,62 +18,12 @@ interface ParsedWord {
   translation?: string;
 }
 
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
-}
-
 export default function Home() {
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState<ParsedWord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<Language>("latin");
   const [skillLevel, setSkillLevel] = useState([50]);
-  const [isRecording, setIsRecording] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-
-  const recognitionRef = useRef<any>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-
-  useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = false;
-      recognitionRef.current.lang = 'fr-FR';
-
-      recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setQuery(transcript);
-        handleSubmit(new Event('submit'), transcript);
-      };
-
-      recognitionRef.current.onerror = (event: any) => {
-        console.error("Speech recognition error", event.error);
-        setIsRecording(false);
-      };
-      
-      recognitionRef.current.onend = () => {
-        setIsRecording(false);
-      };
-    }
-  }, []);
-
-  const toggleRecording = () => {
-    if (isRecording) {
-      recognitionRef.current?.stop();
-      setIsRecording(false);
-    } else {
-      setResponse([]);
-      setAudioUrl(null);
-      recognitionRef.current?.start();
-      setIsRecording(true);
-    }
-  };
 
   const parseResponse = (text: string): ParsedWord[] => {
     const regex = /\[\[(.*?):(.*?)\]\]/g;
@@ -97,28 +46,18 @@ export default function Home() {
     return parts;
   };
 
-  const handleSubmit = async (e: React.FormEvent | Event, voiceQuery?: string) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const currentQuery = voiceQuery || query;
-    if (!currentQuery.trim()) return;
+    if (!query.trim()) return;
 
     setIsLoading(true);
     setResponse([]);
-    setAudioUrl(null);
     try {
-      const input: LanguageChatInput = { message: currentQuery, language: selectedLanguage, skillLevel: skillLevel[0] };
+      const input: LanguageChatInput = { message: query, language: selectedLanguage, skillLevel: skillLevel[0] };
       
-      // We are calling both the language chat and the text to speech flow in parallel
-      const [chatResult, audioResult] = await Promise.all([
-        languageChat(input),
-        textToSpeech(currentQuery) 
-      ]);
+      const chatResult = await languageChat(input);
       
       setResponse(parseResponse(chatResult.response));
-
-      if (audioResult.media) {
-        setAudioUrl(audioResult.media);
-      }
 
     } catch (error) {
       console.error("Error fetching AI response:", error);
@@ -128,17 +67,9 @@ export default function Home() {
       setResponse([{ word: errorMessage }]);
     } finally {
       setIsLoading(false);
-      if (!voiceQuery) {
-        setQuery("");
-      }
+      setQuery("");
     }
   };
-
-  useEffect(() => {
-    if (audioUrl && audioRef.current) {
-        audioRef.current.play().catch(e => console.error("Audio play failed:", e));
-    }
-  }, [audioUrl]);
 
   const getCardTexts = () => {
     if (selectedLanguage === 'latin') {
@@ -178,15 +109,11 @@ export default function Home() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={placeholder}
                 className="flex-grow"
-                disabled={isLoading || isRecording}
+                disabled={isLoading}
                 />
-                <Button type="submit" disabled={isLoading || isRecording}>
+                <Button type="submit" disabled={isLoading}>
                   <Send className="h-4 w-4" />
                   <span className="sr-only">Envoyer</span>
-                </Button>
-                <Button type="button" onClick={toggleRecording} variant={isRecording ? 'destructive' : 'outline'} disabled={isLoading}>
-                  {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                  <span className="sr-only">{isRecording ? 'Arrêter l\'enregistrement' : 'Commencer l\'enregistrement'}</span>
                 </Button>
             </form>
 
@@ -224,7 +151,6 @@ export default function Home() {
                     </div>
                 </div>
             )}
-             {audioUrl && <audio ref={audioRef} src={audioUrl} className="hidden" />}
             </CardContent>
         </Card>
       </div>

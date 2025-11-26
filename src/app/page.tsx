@@ -8,31 +8,58 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Bot, Languages, Send } from "lucide-react";
 import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset } from "@/components/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type Language = "latin" | "grec";
 
+interface ParsedWord {
+  word: string;
+  translation?: string;
+}
+
 export default function Home() {
   const [query, setQuery] = useState("");
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState<ParsedWord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<Language>("latin");
+
+  const parseResponse = (text: string): ParsedWord[] => {
+    const regex = /\[\[(.*?):(.*?)\]\]/g;
+    const parts: ParsedWord[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push({ word: text.substring(lastIndex, match.index) });
+      }
+      parts.push({ word: match[1], translation: match[2] });
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < text.length) {
+      parts.push({ word: text.substring(lastIndex) });
+    }
+
+    return parts;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
 
     setIsLoading(true);
-    setResponse("");
+    setResponse([]);
     try {
       const input: LanguageChatInput = { message: query, language: selectedLanguage };
       const result = await languageChat(input);
-      setResponse(result.response);
+      setResponse(parseResponse(result.response));
     } catch (error) {
       console.error("Error fetching AI response:", error);
       const errorMessage = selectedLanguage === 'latin' 
         ? "Error: Non potui responsum obtinere." 
         : "Σφάλμα: Δεν μπόρεσα να λάβω απάντηση.";
-      setResponse(errorMessage);
+      setResponse([{ word: errorMessage }]);
     } finally {
       setIsLoading(false);
       setQuery("");
@@ -108,7 +135,7 @@ export default function Home() {
                     </Button>
                 </form>
 
-                {(isLoading || response) && (
+                {(isLoading || response.length > 0) && (
                     <div className="mt-6 pt-6 border-t">
                         <h3 className="text-lg font-semibold mb-2 text-primary">
                             {selectedLanguage === 'latin' ? 'Responsum:' : 'Ἀπόκρισις:'}
@@ -120,7 +147,24 @@ export default function Home() {
                                 <span>{selectedLanguage === 'latin' ? 'Cogitat...' : 'Φροντίζει...'}</span>
                             </div>
                         ) : (
-                            <p>{response}</p>
+                            <TooltipProvider>
+                                <p>
+                                {response.map((part, index) =>
+                                    part.translation ? (
+                                    <Tooltip key={index}>
+                                        <TooltipTrigger asChild>
+                                            <span className="underline decoration-dotted cursor-pointer font-semibold text-accent">{part.word}</span>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>{part.translation}</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                    ) : (
+                                    <span key={index}>{part.word}</span>
+                                    )
+                                )}
+                                </p>
+                            </TooltipProvider>
                         )}
                         </div>
                     </div>
